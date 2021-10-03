@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="author" content="Bobur Anvarov">
+	<meta name="description" content="Simple test game, made by javascript">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>GAME - created by Bobur</title>
+
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/css/main.css">
+
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/popper.min.js"></script>
+	<script src="assets/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+	<div class="container">
+
+		<!-- The Modal -->
+		<div class="modal fade" id="myModal">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+
+					<!-- Modal Header -->
+					<div class="modal-header">
+						<h4 class="modal-title">GAME OVER</h4>
+					</div>
+
+					<!-- Modal body -->
+					<div class="modal-body">To'plagan ballingiz:
+						<b id="score"></b>
+					</div>
+
+					<!-- Modal footer -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger exit" data-dismiss="modal">Chiqish</button>
+						<button type="button" id="replay" class="btn btn-success" data-dismiss="modal">Qaytadan
+							O'ynash</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Main -->
+		<div id="main_page" class="text-center col-sm-6">
+			<h1 class="text-center text-dark mainText">Dunyo Davlatlar Poytaxtlari</h1>
+			<button id="start" class="btn btn-outline-dark text-center">Boshlash</button> <br>
+		</div>
+
+		<!-- Game -->
+		<div id="game">
+			<div class="row">
+				<div class="col-sm-12 gameExit">
+					<button type="button" class="btn btn-danger exit">Chiqish</button>
+				</div>
+			</div>
+			<div class="row mt-2">
+
+				<div class="col-sm-4 col-3">
+					<h3 class="text-dark text-left" id="game_score">0</h3>
+				</div>
+				<div class="col-sm-4 col-6 text-center">
+					<img src="img/life.png" id="life1">
+					<img src="img/life.png" id="life2">
+					<img src="img/life.png" id="life3">
+				</div>
+				<div class="col-sm-4 col-3">
+					<h3 class="text-dark text-right" id="timer">16</h3>
+				</div>
+			</div>
+			<div class="row mt-2">
+				<div class="col-sm-12 bg-danger savolBg">
+					<h1 id="savol" class="text-center">1+3=</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6 mt-2">
+					<button class="btn btnColor button" id="a">A</button>
+				</div>
+				<div class="col-sm-6 mt-2">
+					<button class="btn btnColor button" id="b">B</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6 mt-2">
+					<button class="btn btnColor button" id="c">C</button>
+				</div>
+				<div class="col-sm-6 mt-2">
+					<button class="btn btnColor button" id="d">D</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Menu -->
+		<div id="menu">
+
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-4 mt-2 text-center">
+						<button id="poytaxt" class="btn category">Poytaxtlar</button>
+					</div>
+					<div class="col-sm-4 mt-2 text-center">
+						<button id="rusTili" class="btn category">Mavjud emas</button>
+					</div>
+					<div class="col-sm-4 mt-2 text-center">
+						<button class="btn btn-danger category">Mavjud Emas</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+	<script>
+
+		var test = {
+
+			question: [],
+			a: [],
+			b: [],
+			c: [],
+			d: [],
+			answer: [],
+			score: 0,
+			trueAnswer: "",
+			types: 0,
+			life: 4,
+
+			create: function (question, a, b, c, d, answer) {
+				this.question.push(question);
+				this.a.push(a);
+				this.b.push(b);
+				this.c.push(c);
+				this.d.push(d);
+				this.answer.push(answer);
+			},
+
+			getRandom: function () {
+				var max = this.question.length;
+				var number = Math.floor(
+					Math.random() * max);
+				return number
+			},
+
+			begin: function () {
+				this.settings();
+				var i = this.getRandom();
+				$("#savol").text(this.question[i]);
+				$("#a").text(this.a[i]);
+				$("#b").text(this.b[i]);
+				$("#c").text(this.c[i]);
+				$("#d").text(this.d[i]);
+				this.trueAnswer = this.answer[i];
+			},
+
+
+			chek: function (variant, btn) {
+
+				$("#a").attr('disabled', 'true');
+				$("#b").attr('disabled', 'true');
+				$("#c").attr('disabled', 'true');
+				$("#d").attr('disabled', 'true');
+
+				if (variant == this.trueAnswer) {
+
+					this.score = this.score + 5;
+					$("#game_score").text(this.score);
+					$("#score").text(this.score);
+
+					test.begin();
+					$("#timer").text("16");
+
+				}
+				else {
+					btn.css({ 'background-color': 'red' });
+					if (this.trueAnswer === $("#a").text()) {
+						$("#a").addClass("btnTrue");
+					}
+					if (this.trueAnswer === $("#b").text()) {
+						$("#b").addClass("btnTrue");
+					}
+					if (this.trueAnswer === $("#c").text()) {
+						$("#c").addClass("btnTrue");
+					}
+					if (this.trueAnswer === $("#d").text()) {
+						$("#d").addClass("btnTrue");
+					}
+
+					this.life = this.life - 1;
+					if (this.life == 0) {
+						setTimeout(function () {
+							$("#myModal").modal();
+							clearTimeout(mytimer);
+
+						}, 3000);
+					} else {
+						console.log(this.life);
+						$("#life" + this.life).css({ "display": "none" });
+
+						setTimeout(function () {
+							test.begin();
+							$("#timer").text("16");
+						}, 2000);
+					}
+				}
+			},
+
+			settings: function () {
+				$("#a").removeAttr('disabled', 'false');
+				$("#b").removeAttr('disabled', 'false');
+				$("#c").removeAttr('disabled', 'false');
+				$("#d").removeAttr('disabled', 'false');
+
+				$("#a").removeClass("btnTrue");
+				$("#b").removeClass("btnTrue");
+				$("#c").removeClass("btnTrue");
+				$("#d").removeClass("btnTrue");
+
+				$(".button").css({ 'background-color': 'rgb(1, 1, 92)' });
+
+			},
+
+			replay: function () {
+				test.begin();
+				$("#timer").text("16");
+				$("#life1").css({ "display": "inline-block" });
+				$("#life2").css({ "display": "inline-block" });
+				$("#life3").css({ "display": "inline-block" });
+				this.life = 4;
+				this.score = 0;
+				$("#game_score").text(this.score);
+			}
+
+		}
+
+		// Menyudan o'yin turini aniqlab, bog'lanish
+		function types() {
+			console.log(test.types);
+			// 1 - poytaxtlar
+			// 2 - geografiya
+			// 3 - ...
+
+			if (test.types === 1) {
+				poytaxt_test();
+			}
+			// if (test.types === 2) {
+			// 	rusTili_test();
+			// }
+		}
+
+		// POYTAXT lar uchun savollar 
+		function poytaxt_test() {
+
+			test.create("Armaniston- ...", "Toshkent", "Madrid", "RIO", "Erevan", "Erevan");
+			test.create("Afg'oniston- ...", "Qobul", "Dehli", "Pxenyan", "Monako", "Qobul");
+			test.create("Bangladesh- ...", "Manama", "Seul", "Dakka", "Berlin", "Dakka");
+			test.create("Birlashgan Arab Amirliklari- ...", "Vena", "Abu-Dabi", "Afina", "Buenos-Ayres", "Abu-Dabi");
+			test.create("Bahreyn", "Moskva", "Manama", "Monako", "Madrid", "Manama");
+			test.create("Birma", "Kolombo", "Bangkok", "Bishkek", "Rangun", "Rangun");
+			test.create("Butan", "Tximpxu", "Toshkent", "Tokio", "Tirana", "Tximpxu");
+			test.create("Vetnam- ...", "Tbils", "Xanoy", "RIO", "Berlin", "Xanoy");
+			test.create("Gruziya- ...", "Afina", "Dehli", "Tbils", "Monako", "Tbils");
+			test.create("Janubiy Koreya- ...", "Texron", "Seul", "Pekin", "Tokio", "Seul");
+			test.create("Indoneziya- ...", "Jakarta", "Abu-Dabi", "Boku", "Buenos-Ayres", "Jakarta");
+			test.create("Iordaniya-...", "Bog'dod", "Singapur", "Kiev", "Ummon", "Ummon");
+			test.create("Iroq-...", "Male", "Rim", "Bishkek", "Bog'dod", "Bog'dod");
+			test.create("Isroil-...", "Quddus", "Toshkent", "Bern", "London", "Quddus");
+			test.create("Kombodja- ...", "Buxarest", "Madrid", "Pnompen", "Male", "Pnompen");
+			test.create("Qatar- ...", "Qobul", "Anqara", "Doxa", "Minsk", "Doxa");
+			test.create("Shimoliy Koreya- ...", "Pxenyan", "Pnompen", "Pekin", "Berlin", "Pxenyan");
+			test.create("Loas- ...", "Vena", "Ventyan", "Vetnam", "Varshava", "Ventyan");
+			test.create("Livan- ...", "Birma", "Bishkek", "Monako", "Bayrut", "Bayrut");
+			test.create("Malayziya- ...", "Kualo -Lampur", "Kiev", "Kombodja", "Rangun", "Kualo -Lampur");
+			test.create("Maldiv- ...", "Male", "Toshkent", "Madrid", "Tirana", "Male");
+			test.create("Mo'g'liston- ...", "Toshkent", "Ummon", "Ulan-Bator", "Erevan", "Ulan-Bator");
+			test.create("Nepal- ...", "Qobul", "Katmandu", "Pxenyan", "Kolombo", "Katmandu");
+			test.create("Ozarbayjon- ...", "Manama", "Berlin", "Amsterdam", "Boku", "Boku");
+			test.create("Pokiston- ...", "Islomobod", "Abu-Dabi", "Riga", "Afina", "Islomobod");
+			test.create("Saudi-Arabiston- ...", "Al-Riyod", "Manama", "Amsterdam", "Madrid", "Al-Riyod");
+			test.create("Singapur- ...", "Seul", "Sana", "Singapur", "Saraeva", "Singapur");
+			test.create("Suriya- ...", "Dakka", "Dehli", "Damashq", "Dog'iston", "Damashq");
+			test.create("Tailand- ...", "Boku", "Buxoro", "Bishkek", "Bangkok", "Bangkok");
+			test.create("Tojikiston- ...", "Doxa", "Dog'iston", "Dehli", "Dushanbe", "Dushanbe");
+			test.create("Turkiya- ...", "Anqara", "Afina", "Dakka", "Afina", "Anqara");
+			test.create("Turkmaniston- ...", "Astana", "Dushanbe", "Toshkent", "Ashxobod", "Ashxobod");
+			test.create("Ummon- ...", "Moskva", "Manama", "Monako", "Maskat", "Maskat");
+			test.create("Filippin- ...", "Male", "Manila", "Maskat", "Rangun", "Manila");
+			test.create("Xitoy- ...", "Tximpxu", "Afina", "Pekin", "Seul", "Pekin");
+			test.create("Shri-Lanka- ...", "Kolombo", "Madrid", "RIO", "Erevan", "Kolombo");
+			test.create("Eron- ...", "Qobul", "Dehli", "Pxenyan", "Tehron", "Tehron");
+			test.create("Yaman- ...", "Sana", "Seul", "Dakka", "Singapur", "Sana");
+			test.create("Yaponiya- ...", "Tehron", "Toshkent", "Tokio", "Pekin", "Tokio");
+			test.create("O'zbekiston- ...", "Moskva", "Samarqand", "Toshkent", "Madrid", "Toshkent");
+			test.create("Qirg'iziston- ...", "Toshkent", "Astana", "Bishkek", "Dushanbe", "Bishkek");
+			test.create("Qozog'iston- ...", "Bishkek", "Toshkent", "Astana", "Ashxobod", "Astana");
+			test.create("Quvayt- ...", "Al-Quvayt", "Astana", "Al-Riyod", "Abu-Dabi", "Al-Quvayt");
+			test.create("Hindiston- ...", "Bishkek", "Dehli", "Doxa", "Dushanbe", "Dehli");
+			test.create("Avstriya- ...", "Vena", "Lisabon", "Varshava", "Vilnyus", "Vena");
+			test.create("Belgiya- ...", "Bryussel", "Bishkek", "Saraeva", "Madrid", "Bryussel");
+			test.create("Portugaliya- ...", "Katmandu", "Lisabon", "Bishkek", "Parij", "Lisabon");
+			test.create("Germaniya- ...", "Lisabon", "Kiev", "Berlin", "Rim", "Berlin");
+			test.create("Rossiya- ...", "Boku", "Astana", "Manila", "Moskva", "Moskva");
+			test.create("Ispaniya- ...", "Toshkent", "Samarqand", "Barselona", "Madrid", "Madrid");
+		}
+		/////////////////////////
+		// function rusTili_test() {
+
+		// 	// test.create(`"Kim"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"Nima"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"Qachon"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"qayerda"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"qanday"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"qayerga"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"qayerdan"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"nimaga"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"nechida"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"qancha"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"kimga"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"kimnikiga"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"kimni"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"kim"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"kim"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"kim"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"kim"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"kim"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"kim"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"kim"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"kim"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+		// 	// test.create(`"kim"- so'zining tarjimasi qaysi variantda to'g'ri ko'rsatilgan`, "kim", "nima", "qacon", "qayerda", "kim");
+
+		// }
+
+
+
+		/////////////////////////
+		var mytimer;
+		// Taymer
+		function timer() {
+			var x = parseInt($("#timer").text());
+			if (x >= 0) {
+				if (x == 0) {
+					$("#myModal").modal();
+					clearTimeout(mytimer);
+				}
+				mytimer = setTimeout(timer, 1000);
+				x--;
+				$("#timer").text(x);
+			}
+		}
+
+
+		$(window).on("load", function () {
+
+			$("#game_are").hide();
+			$("#game").hide();
+			$("#menu").hide();
+
+			$("#game_are").fadeIn(2000);
+
+			$("#start").click(function () {
+				$("#main_page").hide();
+				$("#menu").slideDown(2000);
+			})
+
+			$("#poytaxt").click(function () {
+				$("#menu").hide();
+				$("#game").slideDown(2000);
+				test.types = 1;
+				types();
+				test.begin();
+				timer();
+			})
+			// $("#rusTili").click(function () {
+			// 	$("#menu").hide();
+			// 	$("#game").slideDown(2000);
+			// 	test.types = 2;
+			// 	types();
+			// 	test.begin();
+			// 	timer();
+			// })
+
+			$("#replay").click(function () {
+				$("#menu").hide();
+				$("#game").slideDown(2000);
+				test.types = test.types;
+				types();
+				test.replay();
+				timer();
+			})
+
+			$(".exit").click(function () {
+				location.reload();
+			})
+
+
+			$("#a").click(function () {
+				test.chek($(this).text(), $(this));
+			})
+			$("#b").click(function () {
+				test.chek($(this).text(), $(this));
+			})
+			$("#c").click(function () {
+				test.chek($(this).text(), $(this));
+			})
+			$("#d").click(function () {
+				test.chek($(this).text(), $(this));
+			})
+
+		})
+	</script>
+
+
+
+
+
+</body>
+
+</html>
